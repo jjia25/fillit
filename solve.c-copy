@@ -1,0 +1,61 @@
+
+
+#include "./headers/fillit.h"
+
+
+int solve(char ***tetrimino, int num_tets, char **board, int size)
+{
+	printf("3) num_tets is %d\n", num_tets);
+	
+	int tet;
+	t_pos pos;
+	t_pos ept;
+
+	ept.row = 0;
+	ept.col = 0;
+	pos.row = 0;
+	pos.col = 0;
+	tet = 0;
+	
+	while (ept.row < size && tet < num_tets /*>= 0 */)
+	{
+		ft_putstr("pos.row: ");
+		ft_putnbr(pos.row);
+		ft_putstr("\n");
+		ept.col = 0;
+		while (ept.col < size && tet < num_tets)
+		{
+			ft_putchar(board[pos.row][pos.col]);
+			if (board[pos.row][pos.col] == '.'  || ft_isalpha(board[pos.row][pos.col]))
+			{
+				pos = ept;
+				if (!(can_place(tetrimino[tet], board, size, pos)))
+				{
+					place_tet(tetrimino[tet], &board, size, pos);
+					tet++;
+				}
+				else
+				{
+					pos.row++;
+					pos.col++;
+					if (can_place(tetrimino[tet], board, size, pos))
+					{
+						place_tet(tetrimino[tet], &board, size, pos);
+						tet++;
+					}
+				}
+			}
+			ept.col++;
+		}
+		ept.row++;
+	}
+	printf("Placed map:\n");
+	print_map(board, size);
+	if ((ept.row == size) && (ept.col == size) && (tet < num_tets))
+	{
+		ft_putstr("DIDN'T SOLVE!\n");
+        return 0;
+	}
+	ft_putstr("SOLVED!\n");
+	return (1);
+}
