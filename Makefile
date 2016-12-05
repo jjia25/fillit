@@ -30,7 +30,7 @@ all: $(NAME)
 $(NAME): $(OFILES)
 	$(MAKE) -C ./libft
 	mv ./libft/libft.a ./lib/
-	$(CC) $(CFLAGS) -g -o $(NAME) $(MAIN) $(OFILES) $(LINK_LIBS)
+	$(CC) $(CFLAGS) -o $(NAME) $(MAIN) $(OFILES) $(LINK_LIBS)
 
 clean:
 	/bin/rm -rf $(OFILES)
