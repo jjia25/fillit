@@ -12,14 +12,14 @@ OFLAGS		=	-c $(CFLAGS)
 
 		#  libs & link cmd	#
 LIB_DIR		=	./lib/
-LIB_LINKS	=	-lftjoanna -llist
+LIB_LINKS	=	-lft
 LINK_LIBS	=	-L $(LIB_DIR) $(LIB_LINKS)
 
 
 		#	  files/folders		#
-OBJ_DIR		=	./obj
 MAIN		=	main.c
-CFILES		=	read_create.c maps.c solve.c
+CFILES		=	read_create.c maps.c solve.c stack.c
+
 ###OFILES		=	$(addprefix $(OBJ_DIR),$(SRC:.c=.o))
 OFILES		= $(CFILES:.c=.o)
 
@@ -28,12 +28,18 @@ all: $(NAME)
 
 
 $(NAME): $(OFILES)
-	$(CC) $(CFLAGS)  -o $(NAME) $(MAIN) $(OFILES) $(LINK_LIBS)
+	$(MAKE) -C ./libft
+	mv ./libft/libft.a ./lib/
+	$(CC) $(CFLAGS) -g -o $(NAME) $(MAIN) $(OFILES) $(LINK_LIBS)
 
 clean:
 	/bin/rm -rf $(OFILES)
+	$(MAKE) -C ./libft clean
 
-fclean: clean
+fclean:
+	/bin/rm -rf $(OFILES)
+	$(MAKE) -C ./libft clean
+	/bin/rm -rf ./lib/libft.a
 	/bin/rm -rf $(NAME)
 
 re: fclean all

@@ -35,7 +35,7 @@ char ***hash_to_alph(char ***alltetriminos, int num_tets)
 	int index= 0;
 
 	letter = 'A';
-	printf("Hash to alpha...\n");
+	// printf("Hash to alpha...\n");
 	while (index < num_tets && letter <= 'Z')
 	{
 		y = 0;
@@ -48,7 +48,7 @@ char ***hash_to_alph(char ***alltetriminos, int num_tets)
 					alltetriminos[index][y][x] = letter;
 				x++;
 			}
-			printf("%s\n", alltetriminos[index][y]);
+			// printf("%s\n", alltetriminos[index][y]);
 			y++;
 		}
 		letter++;
@@ -61,9 +61,10 @@ int	size_map(int size, int num_tets)
 {
 	while (size * size < 4 * (num_tets))
 	 	size++;
-	printf("2) size: %d\n", size);
+	//printf("2) size: %d\n", size);
 	return (size);
 }
+
 
 int		can_place(char **tetrimino, char ***board, int size, t_pos pos)
 {
@@ -73,10 +74,12 @@ int		can_place(char **tetrimino, char ***board, int size, t_pos pos)
 	emptyspace = 0;
 
 	y = 0;
+	//ft_putstr("can place tet: "); ft_putstr(tetrimino[y]); ft_putchar('\n');
+	//print_map(board, size);
 	while (y < 4 && (y + pos.row) < size)
 	{
 		x = 0;
-		while (x < 4 && (x + pos.col) <= size)
+		while (x < 4 && (x + pos.col) < size)
 		{
 			if (ft_isalpha(tetrimino[y][x]) && board[0][pos.row + y][pos.col + x] == '.')
 			{
@@ -102,7 +105,7 @@ void place_tet(char **tetrimino, char ***board, int size, t_pos pos)
 
     orig_col = pos.col;
     y = 0;
-    ft_putstr("placing tetrimino...\n");
+    //ft_putstr("placing tetrimino...\n");
     while (y < 4 && pos.row < size)
     {
         x = 0;
@@ -117,7 +120,7 @@ void place_tet(char **tetrimino, char ***board, int size, t_pos pos)
         pos.row++;
         y++;
     }
-    ft_putstr("placed.\n");
+   // ft_putstr("placed.\n");
 }
 
 char **create_board(int size)
@@ -127,25 +130,25 @@ char **create_board(int size)
 	int y;
 
 	y = 0;
-	printf("Create board:\n");
+	//printf("Create board:\n");
 	if (!(board = (char **)malloc(sizeof(char *) * size)))
 		return (0);
-	ft_bzero(board, (sizeof(char *) * size));
+	// ft_bzero(board, (sizeof(char *) * size));
 	while (y < size)
 	{	
 		//printf("CREATING ANOTHER ROW\n");
 		if (!(board[y] = (char *)malloc(sizeof(char) * size)))
 			return (0);
 		x = 0;
-		ft_bzero(board[y], (sizeof(char) * size));
+		// ft_bzero(board[y], (sizeof(char) * size));
 		while (x < size)
 		{
 			board[y][x] = '.';
-			ft_putchar(board[y][x]);
+			//ft_putchar(board[y][x]);
 			x++;
 		}
 		y++;
-		ft_putchar('\n');
+		//ft_putchar('\n');
 	}
 	return (board);
 }
@@ -157,7 +160,7 @@ void print_map(char ***board, int size)
 	int y;
 
 	y = 0;
-	printf("Printing now:\n");
+	// printf("Printing now:\n");
 	while (y < size)
 	{
 		x = 0;
@@ -169,6 +172,6 @@ void print_map(char ***board, int size)
 		ft_putchar('\n');
 		y++;
 	}
-	printf("x: %d\n", x);
-	printf("y: %d\n", y);
+	// printf("x: %d\n", x);
+	// printf("y: %d\n", y);
 }

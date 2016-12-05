@@ -1,61 +1,149 @@
 
+#include "./headers/fillit.h"
 
+void ft_error()
+{
+        (ft_putstr("error\n"));
+        exit (EXIT_FAILURE);
+}
+ 
+t_pos ft_remove(char c, char ***board, int size)
+{
+	t_pos pos;
+	t_pos curr;
+	int i;
+	int count;
 
-	while (ept.row < size) //goes through tetris LIST and board rows
+	i = 0;
+	count = 0;
+	pos.row = 0;
+	pos.col = 0;
+	curr.row = pos.row;
+	curr.col = pos.col;
+	while (pos.row < size)
 	{
-		ft_putstr("pos.row: ");
-		ft_putnbr(pos.row);
-		ft_putstr("\n");
-		ept.col = 0;
-		while(ept.col < size)
+		pos.col = 0;
+		while (pos.col < size)
 		{
-	
-			ept.col++;
+			if (board[0][pos.row][pos.col] == c)
+            {
+             	if (!i)
+             	{
+             		curr.row = pos.row;
+             		curr.col = pos.col;
+
+             		i++;
+             	}
+             	board[0][pos.row][pos.col] = '.';
+             	count++;
+            }
+            if (count == 4)
+            {
+            	return (curr);
+            }
+        	pos.col++;
 		}
-		ept.row++;
+		pos.row++;
 	}
-// }
+	return (curr);
+}
 
-	t_pos value;
-
-new_function{
-	if (can_place(tetrimino[0], board, size, first_pos))
-	{
-		place_tet(tetrimino[0], &board, size, first_pos);
-		tet++;
-	}
-	while (ept.row < size && tet < num_tets  && tetrimino[0]) //goes through tetris LIST and board rows
-	{
-		ft_putstr("pos.row: ");
-		ft_putnbr(pos.row);
-		ft_putstr("\n");
-		ept.col = 0;
-		while (ept.col < size && tet < num_tets && board[size - 1][size - 1] != 'A') //goes through individual tetris piece rows
+void push_letter(char *stack, int *index)
+{
+    if (*index == 26)
+    {
+        return ;
+    }
+   else
+    {
+		if (*index == 0)
 		{
-			ft_putchar(board[pos.row][pos.col]);
-			if (board[pos.row][pos.col] == '.'  || ft_isalpha(board[pos.row][pos.col]))
+            stack[*index] = 'A';
+		}
+    	(*index)++;
+    }
+}
+
+
+char pop_letter(char *stack, int *index)
+{
+    char c;
+
+    if (*index == -1)
+    {
+        return 0;
+    }
+    (*index)--;
+	c = stack[*index];
+    return (c);
+}
+static void create_stack(char **list)
+{
+	char c;
+	int index;
+
+	c = 'A';
+	*list = (char *)malloc(sizeof(char) * 26);
+	index = 0;
+	while (index < 26)
+	{
+		list[0][index] = c++;
+		index++;
+	}
+}
+
+int solve(char ***tetrimino, int num_tets, char **board, int size)
+{
+	int tet;
+	t_pos *pos;
+	char *stack;
+
+	tet = 0;
+	pos.col = 0;
+	pos.row = 0;
+	create_stack(&stac, tet);
+	while (tet < num_tets)
+	{
+		if (can_place(tetrimino[tet], &board, size, pos))
+		{
+			place_tet(tetrimino[tet], &board, size, pos);
+			pos.row = 0;
+			pos.col = 0;
+			if (tet == (num_tets - 1))
 			{
-				pos = ept;
-				if (!(can_place(tetrimino[tet], board, size, pos)))
+				return (1);
+			}
+			push_letter(stack, &tet, pos);
+			print_map(&board, size); ft_putchar('\n');
+		}
+		else
+		{
+			if (pos.col == size)
+			{
+				if (pos.row == (size - 1))
 				{
-					place_tet(tetrimino[tet], &board, size, pos);
-					tet++;
+					if (tet == 0)
+					{
+						return (0);
+					}
+					pos = ft_remove(pop_pos(stack, &tet), &board, size);
+					// pos = pop_pos(stack, &tet);
+					// ft_remove(('A' + index), &board, size);
+					ft_putstr("pop pos.col returned: "); ft_putnbr(pos.col); ft_putchar('\n');
+					ft_putstr("pop pos.row returned: "); ft_putnbr(pos.row); ft_putchar('\n');
+					print_map(&board, size); ft_putchar('\n');
+
 				}
 				else
 				{
-					//recurse
-					//solve()
 					pos.row++;
-					pos.col++;
-					if (can_place(tetrimino[tet], board, size, pos))
-					{
-						place_tet(tetrimino[tet], &board, size, pos);
-						tet++;
-					}
+					pos.col = 0;
+					continue ;
 				}
 			}
-			ept.col++;
+			pos.col++;
 		}
-		ept.row++;
+
 	}
-	}
+	return (0);
+}
