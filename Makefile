@@ -20,7 +20,6 @@ LINK_LIBS	=	-L $(LIB_DIR) $(LIB_LINKS)
 MAIN		=	main.c
 CFILES		=	read_create.c maps.c solve.c stack.c
 
-###OFILES		=	$(addprefix $(OBJ_DIR),$(SRC:.c=.o))
 OFILES		= $(CFILES:.c=.o)
 
 
@@ -45,16 +44,3 @@ fclean:
 re: fclean all
 
 .PHONY: all clean re fclean
-
-
-
-#link main.c to libft.a
-#gcc main.c -o fillmeup -L./libft/ -lft
-#gcc main.c -o fillmeup -L./lib/ -lft -llist
-
-#/*==== creating new libft.a file and replacing old one =======*/
-#/* (same thing goes for changing list functions in liblist */
-#cd libft
-#make re 
-#rm ../lib/libft.a
-#cp libft.a ../lib/

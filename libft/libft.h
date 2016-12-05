@@ -17,12 +17,12 @@
 # include <string.h>
 # include <stdlib.h>
 
-typedef struct		s_list
+typedef struct			s_list
 {
-	char			*data;
-	size_t			data_size;
-	struct s_list	*next;
-}					t_list;
+	char				*data;
+	size_t				data_size;
+	struct s_list		*next;
+}						t_list;
 
 int						ft_isspace(char c);
 int						ft_digit_length(long n);
@@ -92,10 +92,9 @@ void					ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void					ft_lstadd(t_list **alst, t_list *new);
 void					ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list					*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
-
-void	ft_list_push_back(t_list **begin_list, void *data);
-void ft_list_push_front(t_list **begin_list, void *data);
-int ft_list_size(t_list *begin_list);
-t_list *ft_create_elem(char *data);
+void					ft_list_push_back(t_list **begin_list, void *data);
+void					ft_list_push_front(t_list **begin_list, void *data);
+int						ft_list_size(t_list *begin_list);
+t_list					*ft_create_elem(char *data);
 
 #endif

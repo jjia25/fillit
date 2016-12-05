@@ -1,52 +1,97 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jjia <marvin@42.fr>                        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/12/04 18:40:04 by jjia              #+#    #+#             */
+/*   Updated: 2016/12/04 18:40:06 by jjia             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./headers/fillit.h"
 
-void push_pos(t_pos *pos, t_pos **stack, int *tet)
+void		ft_error(void)
 {
-    // t_pos tmp;
-
-    // tmp = *pos;
-    //ft_putstr("=======push=======\n");
-    //ft_putstr("Current Tet"); ft_putnbr(*tet); ft_putchar('\n');
-   // ft_putstr("push pos.col being stored: "); ft_putnbr(pos->col); ft_putchar('\n');
-	//ft_putstr("push pos.row being stored: "); ft_putnbr(pos->row); ft_putchar('\n');
-    if (*tet >= 26)
-    {
-        ft_putstr("stack is going over");
-        return ;
-    }
-   else
-    {
-		// if (*tet == 0)
-		// {
-  //           stack[*tet] = 'A';
-		// }
-      //  ft_putstr("before seg\n");
-        (stack[0][*tet]) = *pos;
-       // ft_putstr("after seg\n");
-    	*tet += 1;
-    }
-    // ft_putstr(" col: "); ft_putnbr(pos->col); ft_putchar('\n');
-    // pos->col++;
-    //  ft_putstr("before col: "); ft_putnbr(pos->col); ft_putchar('\n');
+	ft_putstr("error\n");
+	exit(EXIT_FAILURE);
 }
 
-
-t_pos pop_pos(t_pos **stack, int *tet)
+char		**convert_1d_to_2d(char *tetrimino1d)
 {
-    t_pos res;
-    //ft_putstr("=======pop=======\n");
-    if (*tet == -1)
-    {
-        ft_putstr("error\n");
-        exit (1);
-    }
-    *tet -= 1;
-    res = stack[0][*tet];
-    stack[0][*tet].col = 0;
-    stack[0][*tet].row = 0;
-    //ft_putstr("pop pos.col returned: "); ft_putnbr(res.col); ft_putchar('\n');
-	//ft_putstr("pop pos.row returned: ");ft_putnbr(res.row); ft_putchar('\n');
-    return (res);
-	// stack[*tet] = pos;
- //    return (pos);
+	char	**new;
+	int		i;
+	int		j;
+	int		k;
+
+	k = 0;
+	i = 0;
+	new = (char **)malloc(sizeof(char *) * 4);
+	while (i < 4)
+	{
+		j = 0;
+		new[i] = (char *)malloc(sizeof(char) * 4);
+		while (j < 4)
+		{
+			new[i][j] = tetrimino1d[k];
+			k++;
+			j++;
+		}
+		k++;
+		i++;
+	}
+	return (new);
+}
+
+void		shift_origin(char **tet)
+{
+	t_pos	pos;
+	t_pos	min;
+
+	pos.col = -1;
+	pos.row = -1;
+	min.col = 4;
+	min.row = 4;
+	while (++(pos.row) < 4 && (pos.col = -1))
+		while (++(pos.col) < 4)
+		{
+			if (tet[pos.row][pos.col] == '#' && pos.col < min.col)
+				min.col = pos.col;
+			if (tet[pos.row][pos.col] == '#' && pos.row < min.row)
+				min.row = pos.row;
+		}
+	pos.row = -1;
+	while (++(pos.row) < 4 && (pos.col = -1) &&
+		((min.col != 0) || (min.row != 0)))
+		while (++(pos.col) < 4)
+			if (tet[pos.row][pos.col] == '#')
+			{
+				tet[pos.row - min.row][pos.col - min.col] = '#';
+				tet[pos.row][pos.col] = '.';
+			}
+}
+
+void		push_pos(t_pos *pos, t_pos **stack, int *tet)
+{
+	if (*tet >= 26)
+		ft_error();
+	(stack[0][*tet]) = *pos;
+	*tet += 1;
+	pos->row = 0;
+	pos->col = 0;
+}
+
+t_pos		pop_pos(t_pos **stack, int *tet, int size, char **board)
+{
+	t_pos	res;
+
+	if (*tet == -1)
+		ft_error();
+	*tet -= 1;
+	res = stack[0][*tet];
+	stack[0][*tet].col = 0;
+	stack[0][*tet].row = 0;
+	ft_remove(('A' + *tet), &board, size);
+	return (res);
 }

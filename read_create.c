@@ -12,127 +12,25 @@
 
 #include "./headers/fillit.h"
 
-char	g_tetriminos[19][20] = {
-	{ "####\n....\n....\n....\n" },
-	{"#...\n#...\n#...\n#...\n"},
-	{".##.\n##..\n....\n....\n"},
-	{"#...\n##..\n.#..\n....\n"},
-	{ "##..\n.##.\n....\n....\n" },
-	{ ".#..\n##..\n#...\n....\n" },
-	{ "##..\n##..\n....\n....\n" },
-	{ ".#..\n.#..\n##..\n....\n" },
-	{ "#...\n###.\n....\n....\n" },
-	{  "###.\n..#.\n....\n....\n" },
-	{  "##..\n#...\n#...\n....\n" },
-	{  ".#..\n###.\n....\n....\n" },
-	{  "#...\n##..\n#...\n....\n" },
-	{  "###.\n.#..\n....\n....\n" },
-	{  ".#..\n##..\n.#..\n....\n" },
-	{  "#...\n#...\n##..\n....\n" },
-	{  "###.\n#...\n....\n....\n" },
-	{  "##..\n.#..\n.#..\n....\n" },
-	{  "..#.\n###.\n....\n....\n" }
-};
-
-// int		*chars_between_hashes(t_list *list) //helper function to count the number of chars between hashes
-// {
-// 	int	flag;
-// 	int inbetween;
-// 	t_list *curr;
-// 	int *chars_between_hashes;
-
-// 	curr = list;
-// 	if (!(chars_between_hashes = (int *)malloc(sizeof(int) * 3))) //3 numbers determine tetrimino shape
-// 		return (NULL);
-// 	//i = 0;
-// 	flag = 0;
-// 	inbetween = 0;
-// 	while (list)
-// 	{
-// 		if (*(curr++) != '#' && flag == 0)
-// 			curr++;
-// 		if (*(curr++) == '#')
-// 			flag = 1;
-// 		else (*(curr++) != '#')
-// 			inbetween++;
-// 		chars_between_hashes++ = inbetween;
-// 	}
-// 	return (chars_between_hashes);
-// }
-char **convert_1d_to_2d(char *tetrimino1d)
+void		line_saver(int tet, int num_tets, char **board, int size)
 {
-	//printf("converting\n");
-	char **new;
-	int i;
-	int j;
-	int k;
-
-	k = 0;
-	i = 0;
-	new = (char **)malloc(sizeof(char *) * 4);
-	while (i < 4)
+	if (tet == (num_tets))
 	{
-		j = 0;
-		new[i] = (char *)malloc(sizeof(char) * 4);
-		while (j < 4)
-		{
-			new[i][j] = tetrimino1d[k];
-			k++;
-			j++;
-		}
-		k++;
-		i++;
+		print_map(&board, size);
+		exit(EXIT_SUCCESS);
 	}
-	//printf("conversion done\n");
-	return (new);
-}
-void shift_origin(char **tetrimino)
-{
-	//printf("shifting\n");
-	t_pos pos;
-	t_pos min;
-
-	pos.col = -1;
-	pos.row = -1;
-	min.col = 4;
-	min.row = 4;
-	//printf("pos col: %d, pos row: %d\n", pos.col, pos.row);
-	while (++(pos.row) < 4 && (pos.col = -1))
-	{
-		while (++(pos.col) < 4)
-		{
-			if (tetrimino[pos.row][pos.col] == '#' && pos.col < min.col)
-				min.col = pos.col;
-			if (tetrimino[pos.row][pos.col] == '#' && pos.row < min.row)
-				min.row = pos.row;	
-		}
-	}
-	//printf("2) pos col: %d, pos row: %d\n", pos.col, pos.row);
-	//printf("min col: %d, min row: %d\n", min.col, min.row);
-	pos.row = -1;
-	while (++(pos.row) < 4 && (pos.col = -1) && ((min.col != 0) || (min.row != 0)))
-		while (++(pos.col) < 4)
-		{
-			if (tetrimino[pos.row][pos.col] == '#')
-			{
-				tetrimino[pos.row - min.row][pos.col - min.col] = '#';
-				tetrimino[pos.row][pos.col] = '.';
-			}
-		}
-	//printf("shifting done\n");
 }
 
-int	is_valid_tetrimino(char **tetrimino)
+int			is_valid_tetrimino(char **tetrimino)
 {
-	t_pos pos;
-	int i;
-	int j;
-	int hashes_found;
+	t_pos	pos;
+	int		i;
+	int		j;
+	int		hashes_found;
 
 	i = 0;
 	while (i < 19)
 	{
-		// printf("**** checking tet #%d\n", i);
 		j = 0;
 		pos.row = -1;
 		hashes_found = 0;
@@ -140,137 +38,86 @@ int	is_valid_tetrimino(char **tetrimino)
 		{
 			pos.col = -1;
 			while (++pos.col < 4)
-				if (g_tetriminos[i][j++] == '#' && tetrimino[pos.row][pos.col] == '#')
-				{
-					//ft_putstr("MATCHING HASH\n");
+				if (g_tetriminos[i][j++] == '#'
+					&& tetrimino[pos.row][pos.col] == '#')
 					hashes_found++;
-				}
 			j++;
 		}
 		i++;
 		if (hashes_found == 4)
-		{
-			//printf("valid check success\n");
 			return (1);
-		}
-		// else if (hashes_found != 4)
-		// 	return (0);
 	}
-	// if (hashes_found == 4)
-	// {
-	// 	//printf("valid check success\n");
-	// 	return (1);
-	// }
 	return (0);
 }
 
-static int valid_hashes(t_list **list)
+static	int	valid_hashes(t_list **list)
 {
-    t_list *tmp;
-    int index;
-   int count;
-    char c;
-    
-    tmp = *list;
-    while (tmp && (index = -1))
-    {
-    	count = 0;
-        while ((c = *(tmp->data + ++index)))
-            if(c == '#')
-               count++;
-            if (count > 4)
-                return (0);
-        tmp = tmp->next;
-    }
-    return (count == 4);
+	t_list	*tmp;
+	int		index;
+	int		count;
+	char	c;
+
+	tmp = *list;
+	while (tmp && (index = -1))
+	{
+		count = 0;
+		while ((c = *(tmp->data + ++index)))
+			if (c == '#')
+				count++;
+		if (count > 4)
+			return (0);
+		tmp = tmp->next;
+	}
+	return (count == 4);
 }
 
-static int		valid_file(char *buffer, int chars_read)
+static	int	valid_file(char *buffer, int chars_read)
 {
-	while (chars_read > 0)
+	int		index;
+
+	index = 0;
+	while (index < chars_read)
 	{
-		if (buffer[chars_read - 1] != '#' 
-			&& buffer[chars_read - 1] != '.'
-			&& buffer[chars_read - 1] != '\n' 
-			&& buffer[chars_read - 1] != '\0')
+		if (index == 20 || (index % 5) == 4)
+		{
+			if (!(buffer[index] == '\n' || buffer[index] == '\0'))
+			{
+				return (0);
+			}
+		}
+		else if (!(buffer[index] == '#' || buffer[index] == '.'))
+		{
 			return (0);
-		chars_read--;
+		}
+		index++;
 	}
 	return (1);
 }
 
-void file_read_create(char *file_name, t_list **list) //can't do % 21 because the
-// last tetrimino ends with \0
+int			file_read_create(char *file_name, t_list **list)
 {
-	char buffer[546];
+	char	buffer[546];
+	int		fd;
+	int		chars_read;
+
 	ft_memset(buffer, '\0', 546);
-	int fd;
-	int chars_read;
-	
 	if ((fd = open(file_name, O_RDONLY)) == -1)
-	{
-		ft_putstr("error\n");
-		exit (EXIT_FAILURE);
-	}
-//    while ((chars_read = read(fd, buffer, 21))) //read 1 tetrimino at a time
-//	{
-//		if ((chars_read == 21 || chars_read == 20) && valid_file(buffer, chars_read))
-//		{
-//
-//			ft_list_push_back(list, ft_strndup(buffer, chars_read));
-//			printf("pushed \n%s", ft_strndup(buffer, chars_read));
-//		}
-//		// create_tetris_list(buffer, list, chars_read);
-//		else
-//		{
-//			//printf("chars read: %d\n", chars_read);
-//			ft_putstr("Read file:  ERROR\n");
-//			exit(1);
-//		}
-//	}
-	while ((chars_read = read(fd, buffer, 21)) == 21) //read 1 tetrimino at a time
-	{
+		ft_error();
+	while ((chars_read = read(fd, buffer, 21)) == 21)
+		(valid_file(buffer, chars_read)) ?
+			ft_list_push_back(list, ft_strndup(buffer, chars_read))
+			: ft_error();
+	if (chars_read == 20)
 		if (valid_file(buffer, chars_read))
 		{
-
 			ft_list_push_back(list, ft_strndup(buffer, chars_read));
-			//printf("pushed \n%s", ft_strndup(buffer, chars_read));
+			if (!(valid_hashes(list)))
+				ft_error();
 		}
-		// create_tetris_list(buffer, list, chars_read);
 		else
-		{
-			//printf("chars read: %d\n", chars_read);
-			//ft_putstr("Read file:  ERROR");
-			ft_putstr("error\n");
-			exit(EXIT_FAILURE);
-		}
-	}
-	if (chars_read == 20)
-	{
-        if (valid_file(buffer, chars_read))
-        {
-            ft_list_push_back(list, ft_strndup(buffer, chars_read));
-            if (!(valid_hashes(list)))
-			{
-				ft_putstr("error\n");
-				exit(EXIT_FAILURE);
-			}
-            //printf("pushed \n%s", ft_strndup(buffer, chars_read));
-        }
-        // create_tetris_list(buffer, list, chars_read);
-        else
-        {
-            //printf("chars read: %d\n", chars_read);
-            ft_putstr("error\n");
-            exit(1);
-        }
-	}
-    else
-    {
-    	ft_putstr("error\n");
-    	exit(1);
-    }
+			ft_error();
+	else
+		ft_error();
 	close(fd);
-
-	//printf("EVERYTHING IS VALID!\n");
+	return (count_num_tets(list));
 }

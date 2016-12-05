@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jjia <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/03 13:51:41 by jjia              #+#    #+#             */
-/*   Updated: 2016/11/20 19:37:35 by jjia             ###   ########.fr       */
+/*   Created: 2016/12/05 01:39:58 by jjia              #+#    #+#             */
+/*   Updated: 2016/12/05 01:40:01 by jjia             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 # include <string.h>
 # include <stdlib.h>
 
-typedef struct		s_list
+typedef struct			s_list
 {
-	char			*data;
-	size_t			*data_size;
-	struct s_list	*next;
-}					t_list;
+	char				*data;
+	size_t				*data_size;
+	struct s_list		*next;
+}						t_list;
 
 int						ft_isspace(char c);
 int						ft_digit_length(long n);
